@@ -1,0 +1,28 @@
+{
+  "name": "queue-schedule",
+  "version": "0.0.1",
+  "description": "Queue producer and consumer tools, with kafka support.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/e174596549/queue-schedule.git"
+  },
+  "keywords": [
+    "queue",
+    "producer",
+    "consumer"
+  ],
+  "author": "e174596549",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/e174596549/queue-schedule/issues"
+  },
+  "homepage": "https://github.com/e174596549/queue-schedule#readme",
+  "dependencies": {
+    "kafka-node": "^2.2.0",
+    "node-slogger": "^0.4.0"
+  }
+}
