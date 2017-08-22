@@ -4,7 +4,9 @@
   "description": "Queue producer and consumer tools, with kafka support.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "bump_path": "npm version patch -m \"upgrade to %s\"",
+    "bump_minor": "npm version minor -m \"upgrade to %s\"",
+    "test": "mocha --recursive /test/mocha"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,7 @@
   "homepage": "https://github.com/e174596549/queue-schedule#readme",
   "dependencies": {
     "kafka-node": "^2.2.0",
-    "node-slogger": "^0.4.0"
+    "node-slogger": "^0.4.0",
+    "mocha": "^3.2.0"
   }
 }
