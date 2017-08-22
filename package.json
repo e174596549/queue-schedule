@@ -1,6 +1,6 @@
 {
   "name": "queue-schedule",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Queue producer and consumer tools, with kafka support.",
   "main": "index.js",
   "scripts": {
