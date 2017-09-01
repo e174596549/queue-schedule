@@ -1,0 +1,25 @@
+language: node_js
+sudo: false
+
+node_js:
+  - "6"
+  - "7"
+  - "8"
+
+cache:
+  directories:
+    - "node_modules"
+    - "kafka"
+
+env:
+  global:
+  - ZOOKEEPER_PEERS=localhost:2181
+  - KAFKA_PEERS=localhost:9092
+
+before_install:
+  - wget http://apache.lauf-forum.at/kafka/0.11.0.0/kafka_2.11-0.11.0.0.tgz -O kafka.tgz
+  - mkdir -p kafka && tar xzf kafka.tgz -C kafka --strip-components 1
+  - nohup bash -c "cd kafka && bin/zookeeper-server-start.sh config/zookeeper.properties &"
+  - nohup bash -c "cd kafka && bin/kafka-server-start.sh config/server.properties &"
+  - sleep 5
+  - kafka/bin/kafka-topics.sh --create --partitions 1 --replication-factor 1 --topic topic.1 --zookeeper localhost:2181
