@@ -1,11 +1,14 @@
 const kafka = require('kafka-node');
+// const async = require('async');
 const {expect} = require('chai');
-const {manager,KafkaProducer,KafkaConsumer} = require('../../index');
+const {KafkaProducer,KafkaConsumer} = require('../../index');
 const ZK_HOST = process.env.ZOOKEEPER_PEERS;
 const FIST_DATA = {a:1,b:2};
-const SCHEDULE_NAME1 = 'schedule1';
-const TOPIC_NAME1 = 'topic.1';
+const SCHEDULE_NAME1 = 'schedule3';
+const TOPIC_NAME1 = 'topic.5';
 const PARTITION1 = 0;
+const DELAY_INTERVAL = 1000;
+let kafkaProducer = null;
 
 function _createProducer(topic,callback) {
     const client = new kafka.Client(ZK_HOST);
@@ -32,18 +35,32 @@ function _createProducer(topic,callback) {
     });
 }
 
-describe('kafka schedule test# ', function() {
+describe('kafka schedule with delay producer test # ', function() {
 
+    it('create a delay producer', function(done) {
+        _createProducer(TOPIC_NAME1,function(err,producer) {
+            if (err) {
+                return done(err);
+            }
+            kafkaProducer = new KafkaProducer({
+                name : SCHEDULE_NAME1,
+                topic: TOPIC_NAME1,
+                partition:PARTITION1,
+                delayInterval:DELAY_INTERVAL,
+                producer
+            });
+            for (let i=0;i<100;i++) {
+                kafkaProducer.addDateDelay(FIST_DATA);
+            }
+            kafkaProducer.on(KafkaProducer.EVENT_DELAY_MESSAGE_SEND_FINISHED,function(err) {
+                done(err);
+            });
 
+        });
+    });
 
-    it('create a consumer',function(done) {
+    it('create a consumer to consume '+TOPIC_NAME1+':'+PARTITION1+ ' delay message',function(done) {
         const client = new kafka.Client(ZK_HOST);
-        client.on('ready',function() {
-            console.log('The client is ready');
-        });
-        client.on('error',function(err) {
-            console.log('the client is error',err);
-        });
         const consumer = new kafka.Consumer(
             client, [{
                 topic: TOPIC_NAME1,
@@ -62,7 +79,7 @@ describe('kafka schedule test# ', function() {
         new KafkaConsumer({
             name: 'kafka',
             consumer,
-            doTask:function(messages,callback) {console.log(messages);
+            doTask:function(messages,callback) {//console.log(messages);
                 if (!hasDone) {
                     const value = messages[0].value;
                     let data = null;
@@ -82,27 +99,8 @@ describe('kafka schedule test# ', function() {
             },
             readCount : 1,
             pauseTime : 500,
-            idleCheckInter: 10 * 1000
+            idleCheckInter: 5 * 1000
         });
-
-        _createProducer(TOPIC_NAME1,function(err,producer) {
-            if (err) {
-                return done(err);
-            }
-            new KafkaProducer({
-                name : SCHEDULE_NAME1,
-                topic: TOPIC_NAME1,
-                partition:PARTITION1,
-                producer
-            }).addData(FIST_DATA,function(err) {
-                if (err) {
-                    console.error('write to queue error',err);
-                    return done('write to queue error');
-                }
-                //done();
-            });
-            
-        })
 
         setTimeout(function() {
             if (!hasDone) {
@@ -110,24 +108,8 @@ describe('kafka schedule test# ', function() {
                 done();
             }
             
-        },5000*10);
+        },1000*10);
     });
 
-    it('use manager to create a producer', function(done) {
-
-            manager.addKafkaSchedule({
-                name : SCHEDULE_NAME1,
-                topic: TOPIC_NAME1,
-                partition:PARTITION1,
-                host:ZK_HOST
-            },FIST_DATA,function(err) {
-                if (err) {
-                    console.error('write to queue error',err);
-                    return done('write to queue error');
-                }
-                done();
-            });
-            
-        });
 
 });

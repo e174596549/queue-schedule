@@ -23,3 +23,6 @@ before_install:
   - nohup bash -c "cd kafka && bin/kafka-server-start.sh config/server.properties &"
   - sleep 5
   - kafka/bin/kafka-topics.sh --create --partitions 1 --replication-factor 1 --topic topic.1 --zookeeper localhost:2181
+  - kafka/bin/kafka-topics.sh --create --partitions 1 --replication-factor 1 --topic topic.2 --zookeeper localhost:2181
+  - kafka/bin/kafka-topics.sh --create --partitions 1 --replication-factor 1 --topic topic.3 --zookeeper localhost:2181
+  - kafka/bin/kafka-topics.sh --create --partitions 1 --replication-factor 1 --topic topic.5 --zookeeper localhost:2181
