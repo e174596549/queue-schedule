@@ -1,5 +1,8 @@
 # Queue Shedule
 
+[![NPM version](https://img.shields.io/npm/v/queue-schedule.svg?style=flat-square)](https://www.npmjs.com/package/queue-schedule)
+[![Build status](https://travis-ci.org/e174596549/queue-schedule.svg?branch=master)](https://travis-ci.org/e174596549/queue-schedule)
+
 Kafka is a high avaliable message queue, but it lacks of consuming message with a slow speed. Some of task with no need to finish it at none, and we want to complete it with a small cost. This is just the reason why we develop `Queue Shedule`.
 
 ## Install
