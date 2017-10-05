@@ -90,3 +90,11 @@ _createProducer(TOPIC_NAME1,function(err,producer) {
     
 });
 ```
+
+## API
+
+For detail usage, see the document online [here](https://doclets.io/e174596549/queue-schedule).
+
+## License
+
+[MIT](LICENSE)

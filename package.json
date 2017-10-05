@@ -21,6 +21,17 @@
     "consumer"
   ],
   "author": "e174596549",
+  "contributors": [{
+      "name": "e174596549",
+      "email": "ly6819@hotmail.com",
+      "url": "https://github.com/e174596549"
+    },
+    {
+      "name": "yunnysunny",
+      "email": "yunnysunny@gmail.com",
+      "url": "https://github.com/yunnysunny"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/e174596549/queue-schedule/issues"
