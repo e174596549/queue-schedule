@@ -1,47 +1,48 @@
 {
-    "name": "queue-schedule",
-    "version": "0.1.0",
-    "description": "Queue producer and consumer tools, with kafka support.",
-    "main": "index.js",
-    "engines": {
-        "node": ">=6.0"
+  "name": "queue-schedule",
+  "version": "0.1.0",
+  "description": "Queue producer and consumer tools, with kafka support.",
+  "main": "index.js",
+  "engines": {
+    "node": ">=6.0"
+  },
+  "scripts": {
+    "bump_path": "npm version patch -m \"upgrade to %s\"",
+    "bump_minor": "npm version minor -m \"upgrade to %s\"",
+    "test": "mocha --recursive test/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/e174596549/queue-schedule.git"
+  },
+  "keywords": [
+    "queue",
+    "producer",
+    "consumer"
+  ],
+  "author": "e174596549",
+  "contributors": [{
+      "name": "e174596549",
+      "email": "ly6819@hotmail.com",
+      "url": "https://github.com/e174596549"
     },
-    "scripts": {
-        "bump_path": "npm version patch -m \"upgrade to %s\"",
-        "bump_minor": "npm version minor -m \"upgrade to %s\"",
-        "test": "mocha --recursive test/mocha"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+ssh://git@github.com/e174596549/queue-schedule.git"
-    },
-    "keywords": [
-        "queue",
-        "producer",
-        "consumer"
-    ],
-    "author": "e174596549",
-    "contributors": [{
-            "name": "e174596549",
-            "email": "ly6819@hotmail.com",
-            "url": "https://github.com/e174596549"
-        },
-        {
-            "name": "yunnysunny",
-            "email": "yunnysunny@gmail.com",
-            "url": "https://github.com/yunnysunny"
-        }
-    ],
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/e174596549/queue-schedule/issues"
-    },
-    "homepage": "https://github.com/e174596549/queue-schedule#readme",
-    "dependencies": {
-        "kafka-node": "^2.2.0"
-    },
-    "devDependencies": {
-        "chai": "^4.1.1",
-        "mocha": "^3.5.0"
+    {
+      "name": "yunnysunny",
+      "email": "yunnysunny@gmail.com",
+      "url": "https://github.com/yunnysunny"
     }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/e174596549/queue-schedule/issues"
+  },
+  "homepage": "https://github.com/e174596549/queue-schedule#readme",
+  "dependencies": {
+    "kafka-node": "^2.2.0"
+  },
+  "devDependencies": {
+    "async": "^2.5.0",
+    "chai": "^4.1.1",
+    "mocha": "^3.5.0"
+  }
 }
