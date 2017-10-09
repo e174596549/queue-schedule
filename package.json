@@ -1,6 +1,6 @@
 {
   "name": "queue-schedule",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Queue producer and consumer tools, with kafka support.",
   "main": "index.js",
   "engines": {
@@ -21,7 +21,8 @@
     "consumer"
   ],
   "author": "e174596549",
-  "contributors": [{
+  "contributors": [
+    {
       "name": "e174596549",
       "email": "ly6819@hotmail.com",
       "url": "https://github.com/e174596549"
