@@ -33,8 +33,8 @@ function _createProducer(topic,callback) {
             return callback(err);
         }
         callback(null,producer);
-        
-    }); 
+
+    });
     producer.on('error',function(err) {
         console.error('error occured',err);
         callback(err);
@@ -87,13 +87,13 @@ _createProducer(TOPIC_NAME1,function(err,producer) {
             console.error('write to queue error',err);            
         }
     });
-    
+
 });
 ```
 
 ## API
 
-For detail usage, see the document online [here](https://doclets.io/e174596549/queue-schedule).
+For detail usage, see the document online [here](https://doclets.io/e174596549/queue-schedule/master).
 
 ## License
 
