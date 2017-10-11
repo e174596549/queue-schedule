@@ -1,4 +1,5 @@
 var kafka = require('kafka-node');
+
 var Consumer = kafka.Consumer;
 var Offset = kafka.Offset;
 var Client = kafka.Client;
@@ -8,10 +9,18 @@ var client = new Client(process.env.ZOOKEEPER_PEERS);
 client.on('ready',function() {
   console.log('client is ready');
 });
+client.once('connect', function () {
+	client.loadMetadataForTopics([topic], function (error, results) {
+	  if (error) {
+	  	return console.error(error);
+	  }
+	  console.log(JSON.stringify(results[1]));
+	});
+});
 var topics = [
     {topic: topic, partition: 0,offset:0},
 ];
-var options = { autoCommit: false, fetchMaxWaitMs: 1000,fetchMinBytes: 1, fetchMaxBytes: 1024 * 1024 , fromOffset:true};
+var options = { autoCommit: false, fetchMaxWaitMs: 1000, fetchMaxBytes: 1024 * 1024 , fromOffset:true};
 
 var consumer = new Consumer(client, topics, options);
 var offset = new Offset(client);
