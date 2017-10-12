@@ -20,10 +20,10 @@ describe('kafka schedule with delay producer test # ', function() {
             delayInterval:DELAY_INTERVAL,
             zookeeperHost:ZK_HOST
         });
-        for (let i=0;i<100;i++) {
-            kafkaProducer.addData(FIST_DATA);
-        }
+        const begin = new Date().getTime();
+        kafkaProducer.addData(FIST_DATA);
         kafkaProducer.on(KafkaProducer.EVENT_DELAY_MESSAGE_SEND_FINISHED,function(err) {
+            expect(new Date().getTime() - begin).to.be.at.least(DELAY_INTERVAL);
             done(err);
         });
 
