@@ -9,7 +9,7 @@
   "scripts": {
     "bump_path": "npm version patch -m \"upgrade to %s\"",
     "bump_minor": "npm version minor -m \"upgrade to %s\"",
-    "test": "mocha --recursive test/mocha"
+    "test": "mocha --recursive --timeout 999999 test/mocha"
   },
   "repository": {
     "type": "git",
@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/e174596549/queue-schedule#readme",
   "dependencies": {
-    "kafka-node": "^2.2.0"
+    "kafka-node": "^2.2.3"
   },
   "devDependencies": {
     "async": "^2.5.0",

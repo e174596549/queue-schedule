@@ -23,71 +23,58 @@ const SCHEDULE_NAME1 = 'schedule1';
 const TOPIC_NAME1 = 'topic.1';
 const PARTITION1 = 0;
 
-function _createProducer(topic,callback) {
-    const client = new kafka.Client(ZK_HOST);
-    const producer = new kafka.Producer(client);
-
-    producer.on('ready', function(err) {
-        if (err) {
-            console.error('producer init fail',err);
-            return callback(err);
-        }
-        callback(null,producer);
-
-    });
-    producer.on('error',function(err) {
-        console.error('error occured',err);
-        callback(err);
-    });
-}
-
-const client = new kafka.Client(ZK_HOST);
-client.on('ready',function() {
-    console.log('The client is ready');
-});
-
-const consumer = new kafka.Consumer(//The consumer
-    client, [{
+let hasDone = false;
+new KafkaConsumer({
+    name: 'kafka',
+    zookeeperHost:ZK_HOST,
+    topics: [{
         topic: TOPIC_NAME1,
         partition: PARTITION1,
-    }], {
+    }],
+    consumerOption: {
         autoCommit: true,
         fetchMaxWaitMs: 1000,
         fromOffset: false,
         fetchMaxBytes: 1024*1024,
-    }
-);
-consumer.on('error',function(err) {
-    console.error('consumer error',err);
-});
-let hasDone = false;
-new KafkaConsumer({
-    name: 'kafka',
-    consumer,
-    doTask:function(messages,callback) {
-        console.log(messages);
+    },
+    doTask:function(messages,callback) {console.log(messages);
+        if (!hasDone) {
+            const value = messages[0].value;
+            let data = null;
+            try {
+                data = JSON.parse(value);
+            } catch (e) {
+                hasDone = true;
+                console.error('parse message error',e);
+                return;
+            }
+            expect(data).to.have.property('a').and.equal(1);
+            console.log('recieve data',data);
+            hasDone = true;
+        }
         callback();
     },
     readCount : 1,
     pauseTime : 500,
     idleCheckInter: 10 * 1000
+}).on(KafkaConsumer.EVENT_CONSUMER_ERROR,function(err) {
+    console.error('consumer error',err);
+    hasDone = true;
+    
 });
 
-_createProducer(TOPIC_NAME1,function(err,producer) {
-    if (err) {
-        return console.error(err);
-    }
-    new KafkaProducer({//The producer
-        name : SCHEDULE_NAME1,
-        topic: TOPIC_NAME1,
-        partition:PARTITION1,
-        producer
-    }).addData(FIST_DATA,function(err) {
-        if (err) {
-            console.error('write to queue error',err);            
-        }
-    });
 
+new KafkaProducer({
+    name : SCHEDULE_NAME1,
+    topic: TOPIC_NAME1,
+    partition:PARTITION1,
+    zookeeperHost:ZK_HOST
+}).addData(FIST_DATA,function(err) {
+    if (err) {
+        console.error('write to queue error',err);
+        return ;
+    }
+    console.info('write to kafka finished');
 });
 ```
 

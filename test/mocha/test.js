@@ -1,4 +1,4 @@
-const kafka = require('kafka-node');
+// const kafka = require('kafka-node');
 const {expect} = require('chai');
 const {manager,KafkaProducer,KafkaConsumer} = require('../../index');
 const ZK_HOST = process.env.ZOOKEEPER_PEERS;
@@ -7,61 +7,22 @@ const SCHEDULE_NAME1 = 'schedule1';
 const TOPIC_NAME1 = 'topic.1';
 const PARTITION1 = 0;
 
-function _createProducer(topic,callback) {
-    const client = new kafka.Client(ZK_HOST);
-    const producer = new kafka.Producer(client);
-
-    producer.on('ready', function(err) {
-        if (err) {
-            console.error('producer init fail',err);
-            return callback(err);
-        }
-        // client.refreshMetadata([topic], function(err) {
-        //     if (err) {
-        //         console.warn('Error refreshing kafka metadata', err);
-        //         return callback('Error refreshing kafka metadata');
-        //     }
-        //     callback(null,producer);
-        // });
-        callback(null,producer);
-        
-    }); 
-    producer.on('error',function(err) {
-        console.error('error occured',err);
-        callback(err);
-    });
-}
-
 describe('kafka schedule test# ', function() {
-
-
-
     it('create a consumer',function(done) {
-        const client = new kafka.Client(ZK_HOST);
-        client.on('ready',function() {
-            console.log('The client is ready');
-        });
-        client.on('error',function(err) {
-            console.log('the client is error',err);
-        });
-        const consumer = new kafka.Consumer(
-            client, [{
+        let hasDone = false;
+        new KafkaConsumer({
+            name: 'kafka',
+            zookeeperHost:ZK_HOST,
+            topics: [{
                 topic: TOPIC_NAME1,
                 partition: PARTITION1,
-            }], {
+            }],
+            consumerOption: {
                 autoCommit: true,
                 fetchMaxWaitMs: 1000,
                 fromOffset: false,
                 fetchMaxBytes: 1024*1024,
-            }
-        );
-        consumer.on('error',function(err) {
-            console.error('consumer error',err);
-        });
-        let hasDone = false;
-        new KafkaConsumer({
-            name: 'kafka',
-            consumer,
+            },
             doTask:function(messages,callback) {console.log(messages);
                 if (!hasDone) {
                     const value = messages[0].value;
@@ -83,26 +44,33 @@ describe('kafka schedule test# ', function() {
             readCount : 1,
             pauseTime : 500,
             idleCheckInter: 10 * 1000
+        }).on(KafkaConsumer.EVENT_CONSUMER_ERROR,function(err) {
+            console.error('consumer error',err);
+            hasDone = true;
+            done(err);
+        }).on(KafkaConsumer.EVENT_CLIENT_READY,function() {
+            console.log('the consumer client is ready');
+        });;
+
+
+        new KafkaProducer({
+            name : SCHEDULE_NAME1,
+            topic: TOPIC_NAME1,
+            partition:PARTITION1,
+            zookeeperHost:ZK_HOST
+        }).addData(FIST_DATA,function(err) {
+            if (err) {
+                console.error('write to queue error',err);
+                return done('write to queue error');
+            }
+            console.info('write to kafka finished');
+        }).on(KafkaProducer.EVENT_CLIENT_READY,function() {
+            console.log('the producer client is ready');
+        }).on(KafkaProducer.EVENT_PRODUCER_READY,function() {
+            console.log('the producer self is ready');
         });
 
-        _createProducer(TOPIC_NAME1,function(err,producer) {
-            if (err) {
-                return done(err);
-            }
-            new KafkaProducer({
-                name : SCHEDULE_NAME1,
-                topic: TOPIC_NAME1,
-                partition:PARTITION1,
-                producer
-            }).addData(FIST_DATA,function(err) {
-                if (err) {
-                    console.error('write to queue error',err);
-                    return done('write to queue error');
-                }
-                //done();
-            });
-            
-        })
+        
 
         setTimeout(function() {
             if (!hasDone) {
@@ -110,7 +78,7 @@ describe('kafka schedule test# ', function() {
                 done();
             }
             
-        },5000*10);
+        },1000*10);
     });
 
     it('use manager to create a producer', function(done) {

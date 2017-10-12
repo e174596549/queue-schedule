@@ -1,4 +1,4 @@
-const kafka = require('kafka-node');
+// const kafka = require('kafka-node');
 // const async = require('async');
 const {expect} = require('chai');
 const {KafkaProducer,KafkaConsumer} = require('../../index');
@@ -8,77 +8,42 @@ const SCHEDULE_NAME1 = 'schedule3';
 const TOPIC_NAME1 = 'topic.5';
 const PARTITION1 = 0;
 const DELAY_INTERVAL = 1000;
-let kafkaProducer = null;
-
-function _createProducer(topic,callback) {
-    const client = new kafka.Client(ZK_HOST);
-    const producer = new kafka.Producer(client);
-
-    producer.on('ready', function(err) {
-        if (err) {
-            console.error('producer init fail',err);
-            return callback(err);
-        }
-        // client.refreshMetadata([topic], function(err) {
-        //     if (err) {
-        //         console.warn('Error refreshing kafka metadata', err);
-        //         return callback('Error refreshing kafka metadata');
-        //     }
-        //     callback(null,producer);
-        // });
-        callback(null,producer);
-        
-    }); 
-    producer.on('error',function(err) {
-        console.error('error occured',err);
-        callback(err);
-    });
-}
 
 describe('kafka schedule with delay producer test # ', function() {
 
     it('create a delay producer', function(done) {
-        _createProducer(TOPIC_NAME1,function(err,producer) {
-            if (err) {
-                return done(err);
-            }
-            kafkaProducer = new KafkaProducer({
-                name : SCHEDULE_NAME1,
-                topic: TOPIC_NAME1,
-                partition:PARTITION1,
-                delayInterval:DELAY_INTERVAL,
-                producer
-            });
-            for (let i=0;i<100;i++) {
-                kafkaProducer.addDateDelay(FIST_DATA);
-            }
-            kafkaProducer.on(KafkaProducer.EVENT_DELAY_MESSAGE_SEND_FINISHED,function(err) {
-                done(err);
-            });
 
+        const kafkaProducer = new KafkaProducer({
+            name : SCHEDULE_NAME1,
+            topic: TOPIC_NAME1,
+            partition:PARTITION1,
+            delayInterval:DELAY_INTERVAL,
+            zookeeperHost:ZK_HOST
         });
+        const begin = new Date().getTime();
+        kafkaProducer.addData(FIST_DATA);
+        kafkaProducer.on(KafkaProducer.EVENT_DELAY_MESSAGE_SEND_FINISHED,function(err) {
+            expect(new Date().getTime() - begin).to.be.at.least(DELAY_INTERVAL);
+            done(err);
+        });
+
     });
 
     it('create a consumer to consume '+TOPIC_NAME1+':'+PARTITION1+ ' delay message',function(done) {
-        const client = new kafka.Client(ZK_HOST);
-        const consumer = new kafka.Consumer(
-            client, [{
+        let hasDone = false;
+        new KafkaConsumer({
+            name: 'kafka',
+            zookeeperHost:ZK_HOST,
+            topics: [{
                 topic: TOPIC_NAME1,
                 partition: PARTITION1,
-            }], {
+            }],
+            consumerOption:{
                 autoCommit: true,
                 fetchMaxWaitMs: 1000,
                 fromOffset: false,
                 fetchMaxBytes: 1024*1024,
-            }
-        );
-        consumer.on('error',function(err) {
-            console.error('consumer error',err);
-        });
-        let hasDone = false;
-        new KafkaConsumer({
-            name: 'kafka',
-            consumer,
+            },
             doTask:function(messages,callback) {//console.log(messages);
                 if (!hasDone) {
                     const value = messages[0].value;
@@ -100,7 +65,11 @@ describe('kafka schedule with delay producer test # ', function() {
             readCount : 1,
             pauseTime : 500,
             idleCheckInter: 5 * 1000
-        });
+        }).on(KafkaConsumer.EVENT_CONSUMER_ERROR,function(err) {
+            console.error('consumer error',err);
+            hasDone = true;
+            done(err);
+        });;
 
         setTimeout(function() {
             if (!hasDone) {
