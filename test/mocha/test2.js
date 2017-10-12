@@ -1,4 +1,4 @@
-const kafka = require('kafka-node');
+// const kafka = require('kafka-node');
 const {expect} = require('chai');
 const {manager,KafkaProducer,KafkaConsumer} = require('../../index');
 const ZK_HOST = process.env.ZOOKEEPER_PEERS;
@@ -19,74 +19,48 @@ const TOPIC_LIST = [
     }
 ];
 
-function _createProducer(topic,callback) {
-    const client = new kafka.Client(ZK_HOST);
-    const producer = new kafka.Producer(client);
-
-    producer.on('ready', function(err) {
-        if (err) {
-            console.error('producer init fail',err);
-            return callback(err);
-        }
-        // client.refreshMetadata([topic], function(err) {
-        //     if (err) {
-        //         console.warn('Error refreshing kafka metadata', err);
-        //         return callback('Error refreshing kafka metadata');
-        //     }
-        //     callback(null,producer);
-        // });
-        callback(null,producer);
-        
-    }); 
-    producer.on('error',function(err) {
-        console.error('error occured',err);
-        callback(err);
-    });
-}
-
 describe('kafka schedule test with multi topic # ', function() {
 
     it('create a producer to send to multi topic', function(done) {
-        _createProducer(TOPIC_NAME1,function(err,producer) {
+
+        let hasDone = false;
+        new KafkaProducer({
+            name : SCHEDULE_NAME1,
+            topicList:TOPIC_LIST,
+            zookeeperHost:ZK_HOST
+        }).on(KafkaProducer.EVENT_PRODUCER_ERROR,function(err) {
+            hasDone = true;
+            done(err);
+        }).addData(FIST_DATA,function(err) {
             if (err) {
-                return done(err);
-            }
-            new KafkaProducer({
-                name : SCHEDULE_NAME1,
-                topicList:TOPIC_LIST,
-                producer
-            }).addData(FIST_DATA,function(err) {
-                if (err) {
-                    console.error('write to queue error',err);
+                console.error('write to queue error',err);
+                if (!hasDone) {
                     return done('write to queue error');
                 }
-                done();
-            });
-            
-        })
+            }
+            console.info('write to kafka finished');
+            done();
+        });
+
     });
 
     it('create a consumer to consume one of the topic',function(done) {
-        const client = new kafka.Client(ZK_HOST);
-        const consumer = new kafka.Consumer(
-            client, [{
+
+        let hasDone = false;
+        new KafkaConsumer({
+            name: 'kafka',
+            zookeeperHost:ZK_HOST,
+            topics: [{
                 topic: TOPIC_NAME1,
                 partition: PARTITION1,
                 offset: 0
-            }], {
+            }],
+            consumerOption:{
                 autoCommit: true,
                 fetchMaxWaitMs: 1000,
                 fromOffset: false,
                 fetchMaxBytes: 200,
-            }
-        );
-        consumer.on('error',function(err) {
-            console.error('consumer error',err);
-        });
-        let hasDone = false;
-        new KafkaConsumer({
-            name: 'kafka',
-            consumer,
+            },
             doTask:function(messages,callback) {//console.log(messages);
                 if (!hasDone) {
                     const value = messages[0].value;
@@ -108,6 +82,10 @@ describe('kafka schedule test with multi topic # ', function() {
             readCount : 1,
             pauseTime : 500,
             idleCheckInter: 10 * 1000
+        }).on(KafkaConsumer.EVENT_CONSUMER_ERROR,function(err) {
+            console.error('consumer error',err);
+            hasDone = true;
+            done(err);
         });
 
         setTimeout(function() {
@@ -121,18 +99,18 @@ describe('kafka schedule test with multi topic # ', function() {
 
     it('use manager to create a producer to send data to multi topic', function(done) {
 
-            manager.addKafkaSchedule({
-                name : SCHEDULE_NAME1,
-                topicList:TOPIC_LIST,
-                host:ZK_HOST
-            },FIST_DATA,function(err) {
-                if (err) {
-                    console.error('write to queue error',err);
-                    return done('write to queue error');
-                }
-                done();
-            });
-            
+        manager.addKafkaSchedule({
+            name : SCHEDULE_NAME1,
+            topicList:TOPIC_LIST,
+            host:ZK_HOST
+        },FIST_DATA,function(err) {
+            if (err) {
+                console.error('write to queue error',err);
+                return done('write to queue error');
+            }
+            done();
         });
+            
+    });
 
 });
