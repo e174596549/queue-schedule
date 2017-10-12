@@ -81,21 +81,31 @@ describe('kafka schedule test# ', function() {
         },1000*10);
     });
 
-    it('use manager to create a producer', function(done) {
-
-            manager.addKafkaSchedule({
-                name : SCHEDULE_NAME1,
-                topic: TOPIC_NAME1,
-                partition:PARTITION1,
-                host:ZK_HOST
-            },FIST_DATA,function(err) {
+    it('the producer create by manager will be the same when give the same schedule name', function(done) {
+        const options = {
+            name : SCHEDULE_NAME1,
+            topic: TOPIC_NAME1,
+            partition:PARTITION1,
+            host:ZK_HOST
+        };
+        manager.addKafkaSchedule(options,FIST_DATA,function(err) {
+            if (err) {
+                console.error('write to queue error',err);
+                return done('write to queue error');
+            }
+            const firstGetProducer = manager.getProducerByScheduleName(SCHEDULE_NAME1);
+            manager.addKafkaSchedule(options,FIST_DATA,function(err) {
                 if (err) {
                     console.error('write to queue error',err);
                     return done('write to queue error');
                 }
+                const secondGetProducer = manager.getProducerByScheduleName(SCHEDULE_NAME1);
+                expect(firstGetProducer === secondGetProducer).to.be.true;
                 done();
             });
             
         });
+        
+    });
 
 });
