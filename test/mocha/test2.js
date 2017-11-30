@@ -11,11 +11,9 @@ const PARTITION2 = 0;
 const TOPIC_LIST = [
     {
         name:TOPIC_NAME1,
-        partition:PARTITION1
     },
     {
         name : TOPIC_NAME2,
-        partition:PARTITION2
     }
 ];
 
@@ -52,7 +50,6 @@ describe('kafka schedule test with multi topic # ', function() {
             zookeeperHost:ZK_HOST,
             topics: [{
                 topic: TOPIC_NAME1,
-                partition: PARTITION1,
                 offset: 0
             }],
             consumerOption:{
@@ -74,8 +71,10 @@ describe('kafka schedule test with multi topic # ', function() {
                     }
                     expect(data).to.have.property('a').and.equal(1);
                     console.log('recieve data',data);
-                    hasDone = true;
-                    done();
+                    if (!hasDone) {console.log('done',Date.now());hasDone = true;
+                        done();
+                    }
+                    
                 }
                 callback();
             },
@@ -94,7 +93,7 @@ describe('kafka schedule test with multi topic # ', function() {
                 done();
             }
             
-        },5000);
+        },50000);
     });
 
     it('use manager to create a producer to send data to multi topic', function(done) {

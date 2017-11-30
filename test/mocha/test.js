@@ -15,7 +15,6 @@ describe('kafka schedule test# ', function() {
             zookeeperHost:ZK_HOST,
             topics: [{
                 topic: TOPIC_NAME1,
-                partition: PARTITION1,
             }],
             consumerOption: {
                 autoCommit: true,
@@ -36,8 +35,11 @@ describe('kafka schedule test# ', function() {
                     }
                     expect(data).to.have.property('a').and.equal(1);
                     console.log('recieve data',data);
-                    hasDone = true;
-                    done();
+                    if (!hasDone) {
+                        done();
+                        hasDone = true;
+                    }
+                    
                 }
                 callback();
             },
@@ -56,7 +58,6 @@ describe('kafka schedule test# ', function() {
         new KafkaProducer({
             name : SCHEDULE_NAME1,
             topic: TOPIC_NAME1,
-            partition:PARTITION1,
             zookeeperHost:ZK_HOST
         }).addData(FIST_DATA,function(err) {
             if (err) {
@@ -78,14 +79,13 @@ describe('kafka schedule test# ', function() {
                 done();
             }
             
-        },1000*10);
+        },5000*10);
     });
 
     it('the producer create by manager will be the same when give the same schedule name', function(done) {
         const options = {
             name : SCHEDULE_NAME1,
             topic: TOPIC_NAME1,
-            partition:PARTITION1,
             host:ZK_HOST
         };
         manager.addKafkaSchedule(options,FIST_DATA,function(err) {

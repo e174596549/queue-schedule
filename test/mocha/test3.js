@@ -17,7 +17,6 @@ describe('kafka schedule with delay producer test # ', function() {
         const kafkaProducer = new KafkaProducer({
             name : SCHEDULE_NAME1,
             topic: TOPIC_NAME1,
-            partition:PARTITION1,
             delayInterval:DELAY_INTERVAL,
             zookeeperHost:ZK_HOST
         });
@@ -30,14 +29,13 @@ describe('kafka schedule with delay producer test # ', function() {
 
     });
 
-    it('create a consumer to consume '+TOPIC_NAME1+':'+PARTITION1+ ' delay message',function(done) {
+    it('create a consumer to consume '+TOPIC_NAME1+ ' delay message',function(done) {
         let hasDone = false;
         new KafkaConsumer({
             name: 'kafka',
             zookeeperHost:ZK_HOST,
             topics: [{
                 topic: TOPIC_NAME1,
-                partition: PARTITION1,
             }],
             consumerOption:{
                 autoCommit: true,
@@ -58,8 +56,10 @@ describe('kafka schedule with delay producer test # ', function() {
                     }
                     //expect(data).to.have.property('a').and.equal(1);
                     console.log('recieve data',data);
-                    hasDone = true;
-                    done();
+                    if (!hasDone) {
+                        done();hasDone = true;
+                    }
+                    
                 }
                 callback();
             },
@@ -88,7 +88,6 @@ describe('kafka schedule with delay producer test # ', function() {
         const option = {
             name : SCHEDULE_NAME1,
             topic: TOPIC_NAME1,
-            partition:PARTITION1,
             delayInterval:DELAY_INTERVAL,
             zookeeperHost:ZK_HOST
         };
