@@ -87,13 +87,13 @@ describe('kafka schedule test with multi topic # ', function() {
             done(err);
         });
 
-        setTimeout(function() {
-            if (!hasDone) {
-                console.info('this may be not data');
-                done();
-            }
+        // setTimeout(function() {
+        //     if (!hasDone) {
+        //         console.info('this may be not data');
+        //         done();
+        //     }
             
-        },50000);
+        // },50000);
     });
 
     it('use manager to create a producer to send data to multi topic', function(done) {

@@ -73,13 +73,13 @@ describe('kafka schedule test# ', function() {
 
         
 
-        setTimeout(function() {
-            if (!hasDone) {
-                console.log('this may be not data');
-                done();
-            }
+        // setTimeout(function() {
+        //     if (!hasDone) {
+        //         console.log('this may be not data');
+        //         done();
+        //     }
             
-        },5000*10);
+        // },5000*10);
     });
 
     it('the producer create by manager will be the same when give the same schedule name', function(done) {
