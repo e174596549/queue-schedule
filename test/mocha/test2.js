@@ -2,6 +2,7 @@
 const {expect} = require('chai');
 const {manager,KafkaProducer,KafkaConsumer} = require('../../index');
 const ZK_HOST = process.env.ZOOKEEPER_PEERS;
+const KAFKA_HOST = process.env.KAFKA_PEERS;
 const FIST_DATA = {a:1,b:2};
 const SCHEDULE_NAME1 = 'schedule2';
 const TOPIC_NAME1 = 'topic.2';
@@ -25,6 +26,7 @@ describe('kafka schedule test with multi topic # ', function() {
         new KafkaProducer({
             name : SCHEDULE_NAME1,
             topicList:TOPIC_LIST,
+            kafkaHost:KAFKA_HOST,
             zookeeperHost:ZK_HOST
         }).on(KafkaProducer.EVENT_PRODUCER_ERROR,function(err) {
             hasDone = true;
@@ -48,6 +50,7 @@ describe('kafka schedule test with multi topic # ', function() {
         new KafkaConsumer({
             name: 'kafka',
             zookeeperHost:ZK_HOST,
+            kafkaHost:KAFKA_HOST,
             topics: [{
                 topic: TOPIC_NAME1,
                 offset: 0
@@ -101,6 +104,7 @@ describe('kafka schedule test with multi topic # ', function() {
         manager.addKafkaSchedule({
             name : SCHEDULE_NAME1,
             topicList:TOPIC_LIST,
+            kafkaHost:KAFKA_HOST,
             host:ZK_HOST
         },FIST_DATA,function(err) {
             if (err) {
