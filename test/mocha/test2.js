@@ -7,8 +7,7 @@ const FIST_DATA = {a:1,b:2};
 const SCHEDULE_NAME1 = 'schedule2';
 const TOPIC_NAME1 = 'topic.2';
 const TOPIC_NAME2 = 'topic.3';
-const PARTITION1 = 0;
-const PARTITION2 = 0;
+
 const TOPIC_LIST = [
     {
         name:TOPIC_NAME1,

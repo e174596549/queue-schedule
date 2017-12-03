@@ -8,7 +8,6 @@ const KAFKA_HOST = process.env.KAFKA_PEERS;
 const FIST_DATA = {a:1,b:2};
 const SCHEDULE_NAME1 = 'schedule3';
 const TOPIC_NAME1 = 'topic.5';
-const PARTITION1 = 0;
 const DELAY_INTERVAL = 1000;
 
 describe('kafka schedule with delay producer test # ', function() {
@@ -32,10 +31,10 @@ describe('kafka schedule with delay producer test # ', function() {
     });
     
         it('create a consumer to consume '+TOPIC_NAME1+ ' delay message',function(done) {
-            setTimeout(function() {
+            // setTimeout(function() {
                 let hasDone = false;
                 new KafkaConsumer({
-                    name: 'kafka3',
+                    name: SCHEDULE_NAME1,
                     zookeeperHost:ZK_HOST,
                     kafkaHost:KAFKA_HOST,
                     topics: [{
@@ -47,7 +46,7 @@ describe('kafka schedule with delay producer test # ', function() {
                         fromOffset: false,
                         fetchMaxBytes: 1024*1024,
                     },
-                    doTask:function(messages,callback) {//console.log(messages);
+                    doTask:function(messages,callback) {console.log('kafka3',messages);
                         if (!hasDone) {
                             const value = messages[0].value;
                             let data = null;
@@ -83,7 +82,7 @@ describe('kafka schedule with delay producer test # ', function() {
                 //     }
                     
                 // },1000*10);
-            },DELAY_INTERVAL*5);
+            // },DELAY_INTERVAL*5);
         });
     //
 
