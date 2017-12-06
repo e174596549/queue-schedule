@@ -2,20 +2,18 @@
 const {expect} = require('chai');
 const {manager,KafkaProducer,KafkaConsumer} = require('../../index');
 const ZK_HOST = process.env.ZOOKEEPER_PEERS;
+const KAFKA_HOST = process.env.KAFKA_PEERS;
 const FIST_DATA = {a:1,b:2};
 const SCHEDULE_NAME1 = 'schedule2';
 const TOPIC_NAME1 = 'topic.2';
 const TOPIC_NAME2 = 'topic.3';
-const PARTITION1 = 0;
-const PARTITION2 = 0;
+
 const TOPIC_LIST = [
     {
         name:TOPIC_NAME1,
-        partition:PARTITION1
     },
     {
         name : TOPIC_NAME2,
-        partition:PARTITION2
     }
 ];
 
@@ -27,6 +25,7 @@ describe('kafka schedule test with multi topic # ', function() {
         new KafkaProducer({
             name : SCHEDULE_NAME1,
             topicList:TOPIC_LIST,
+            kafkaHost:KAFKA_HOST,
             zookeeperHost:ZK_HOST
         }).on(KafkaProducer.EVENT_PRODUCER_ERROR,function(err) {
             hasDone = true;
@@ -50,9 +49,9 @@ describe('kafka schedule test with multi topic # ', function() {
         new KafkaConsumer({
             name: 'kafka',
             zookeeperHost:ZK_HOST,
+            kafkaHost:KAFKA_HOST,
             topics: [{
                 topic: TOPIC_NAME1,
-                partition: PARTITION1,
                 offset: 0
             }],
             consumerOption:{
@@ -74,8 +73,10 @@ describe('kafka schedule test with multi topic # ', function() {
                     }
                     expect(data).to.have.property('a').and.equal(1);
                     console.log('recieve data',data);
-                    hasDone = true;
-                    done();
+                    if (!hasDone) {console.log('done',Date.now());hasDone = true;
+                        done();
+                    }
+                    
                 }
                 callback();
             },
@@ -88,13 +89,13 @@ describe('kafka schedule test with multi topic # ', function() {
             done(err);
         });
 
-        setTimeout(function() {
-            if (!hasDone) {
-                console.info('this may be not data');
-                done();
-            }
+        // setTimeout(function() {
+        //     if (!hasDone) {
+        //         console.info('this may be not data');
+        //         done();
+        //     }
             
-        },5000);
+        // },50000);
     });
 
     it('use manager to create a producer to send data to multi topic', function(done) {
@@ -102,6 +103,7 @@ describe('kafka schedule test with multi topic # ', function() {
         manager.addKafkaSchedule({
             name : SCHEDULE_NAME1,
             topicList:TOPIC_LIST,
+            kafkaHost:KAFKA_HOST,
             host:ZK_HOST
         },FIST_DATA,function(err) {
             if (err) {
