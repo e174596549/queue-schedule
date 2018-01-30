@@ -1,3 +1,7 @@
+## 0.5.2
+
+1. Add parameter of `fromOffset` to KafkaConsumer.
+
 ## 0.5.1
 
 1. Add feature of emitting event of `KafkaProducer.EVENT_SEND_ERROR`.
