@@ -1,3 +1,7 @@
+## 0.5.3
+
+1. Resovle the issue of double stringify.
+
 ## 0.5.2
 
 1. Add parameter of `fromOffset` to KafkaConsumer.
