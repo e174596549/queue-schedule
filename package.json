@@ -44,6 +44,7 @@
   "devDependencies": {
     "async": "^2.5.0",
     "chai": "^4.1.1",
-    "mocha": "^3.5.0"
+    "mocha": "^3.5.0",
+    "node-slogger": "^0.5.1"
   }
 }
