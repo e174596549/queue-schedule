@@ -22,8 +22,8 @@ const kafkaProducer = new KafkaProducer({
     kafkaHost:KAFKA_HOST,
     // zookeeperHost:ZK_HOST
 });
-const NAMES = [SCHEDULE_NAME1];
-for(let name of NAMES) {
+const NAMES = [SCHEDULE_NAME1];const name = NAMES[0];
+// for(let name of NAMES) {
     kafkaProducer.on(KafkaProducer.EVENT_CLIENT_ERROR,function(err) {
         slogger.error(`create kafka${name} queue fail`,err);
     }).on(KafkaProducer.EVENT_PRODUCER_ERROR,function(err) {
@@ -34,7 +34,7 @@ for(let name of NAMES) {
     }).on(KafkaProducer.EVENT_DELAY_MESSAGE_SEND_FINISHED,function(err) {
         slogger.debug('send data over');
     });
-}
+// }
 
 let isEnd = false;
 function test() {
