@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/e174596549/queue-schedule#readme",
   "dependencies": {
-    "kafka-node": "^2.2.3"
+    "kafka-node": "^3.0.1"
   },
   "devDependencies": {
     "async": "^2.5.0",
