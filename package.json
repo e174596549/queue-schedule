@@ -1,6 +1,6 @@
 {
   "name": "queue-schedule",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Queue producer and consumer tools, with kafka support.",
   "main": "index.js",
   "engines": {
@@ -9,6 +9,7 @@
   "scripts": {
     "bump_path": "npm version patch -m \"upgrade to %s\"",
     "bump_minor": "npm version minor -m \"upgrade to %s\"",
+    "release":"git push && release-to-github-with-changelog",
     "test": "mocha --recursive --timeout 999999 test/mocha"
   },
   "repository": {
@@ -39,11 +40,12 @@
   },
   "homepage": "https://github.com/e174596549/queue-schedule#readme",
   "dependencies": {
-    "kafka-node": "^2.2.3"
+    "kafka-node": "^3.0.1"
   },
   "devDependencies": {
     "async": "^2.5.0",
     "chai": "^4.1.1",
-    "mocha": "^3.5.0"
+    "mocha": "^3.5.0",
+    "node-slogger": "^0.5.1"
   }
 }
