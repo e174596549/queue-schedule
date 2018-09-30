@@ -1,12 +1,12 @@
 const {expect} = require('chai');
-const {KafkaProducer,KafkaConsumer} = require('../../index');
-const ZK_HOST = process.env.ZOOKEEPER_PEERS;//console.log(process.env);
+const {KafkaProducer} = require('../../index');
+// const ZK_HOST = process.env.ZOOKEEPER_PEERS;//console.log(process.env);
 const KAFKA_HOST = process.env.KAFKA_PEERS;
 // const FIST_DATA = {a:1,b:2};
 const SCHEDULE_NAME1 = 'schedule1';
-const TOPIC_NAME1 = 'topic.1';
+const TOPIC_NAME1 = 'topic.error';
 
-describe('error test#',function() {
+describe.skip('error test#',function() {
     it('use manager to create  producer to send multi data delay', function(done) {
         // const begin = new Date().getTime();
         const len = 10000;
@@ -18,7 +18,6 @@ describe('error test#',function() {
             topic: TOPIC_NAME1,
             delayInterval:1000,
             kafkaHost:KAFKA_HOST,
-            zookeeperHost:ZK_HOST
         });
         for (var i=0;i<len;i++) {
             kafkaProducer.addData(data);
