@@ -48,10 +48,7 @@ describe('kafka schedule test with multi topic # ', function() {
         new KafkaConsumer({
             name: 'kafka',
             kafkaHost:KAFKA_HOST,
-            topics: [{
-                topic: TOPIC_NAME1,
-                offset: 0
-            }],
+            topics: [TOPIC_NAME1],
             consumerOption:{
                 autoCommit: true,
                 fetchMaxWaitMs: 1000,

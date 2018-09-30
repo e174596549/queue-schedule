@@ -36,9 +36,7 @@ describe('kafka schedule with delay producer test # ', function() {
                 new KafkaConsumer({
                     name: SCHEDULE_NAME1,
                     kafkaHost:KAFKA_HOST,
-                    topics: [{
-                        topic: TOPIC_NAME5,
-                    }],
+                    topics: [TOPIC_NAME5],
                     consumerOption:{
                         autoCommit: true,
                         fetchMaxWaitMs: 1000,

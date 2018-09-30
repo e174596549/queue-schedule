@@ -13,9 +13,7 @@ describe('kafka schedule test# ', function() {
         new KafkaConsumer({
             name: 'kafka',
             kafkaHost:KAFKA_HOST,
-            topics: [{
-                topic: TOPIC_NAME1,
-            }],
+            topics: [ TOPIC_NAME1],
             consumerOption: {
                 autoCommit: true,
                 fetchMaxWaitMs: 1000,
