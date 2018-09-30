@@ -6,7 +6,7 @@ const KAFKA_HOST = process.env.KAFKA_PEERS;
 const SCHEDULE_NAME1 = 'schedule1';
 const TOPIC_NAME1 = 'topic.error';
 
-describe.skip('error test#',function() {
+describe('error test#',function() {
     it('use manager to create  producer to send multi data delay', function(done) {
         // const begin = new Date().getTime();
         const len = 10000;

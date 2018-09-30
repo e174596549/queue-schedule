@@ -1,6 +1,6 @@
 // const kafka = require('kafka-node');
 const {expect} = require('chai');
-const {manager,KafkaProducer,KafkaConsumer} = require('../../index');
+const {KafkaProducer,KafkaConsumer} = require('../../index');
 // const ZK_HOST = process.env.ZOOKEEPER_PEERS;//console.log(process.env);
 const KAFKA_HOST = process.env.KAFKA_PEERS;
 const FIST_DATA = {a:1,b:2};
@@ -80,57 +80,6 @@ describe('kafka schedule test# ', function() {
         //     }
             
         // },5000*10);
-    });
-    // it('create a producer to send', function(done) {
-        
-    //     let hasDone = false;
-    //     new KafkaProducer({
-    //         name : SCHEDULE_NAME1,
-    //         topic: TOPIC_NAME1,
-    //         kafkaHost:KAFKA_HOST,
-    //         zookeeperHost:ZK_HOST
-    //     }).on(KafkaProducer.EVENT_PRODUCER_ERROR,function(err) {
-    //         hasDone = true;
-    //         done(err);
-    //     }).addData(FIST_DATA,function(err) {
-    //         if (err) {
-    //             console.error('write to queue error',err);
-    //             if (!hasDone) {
-    //                 return done('write to queue error');
-    //             }
-    //         }
-    //         console.info('write to kafka finished');
-    //         done();
-    //     });
-
-    // });
-
-    
-
-    it.skip('the producer create by manager will be the same when give the same schedule name', function(done) {
-        const options = {
-            name : SCHEDULE_NAME1,
-            topic: TOPIC_NAME1,
-            kafkaHost:KAFKA_HOST,
-        };
-        manager.addKafkaSchedule(options,FIST_DATA,function(err) {
-            if (err) {
-                console.error('write to queue error',err);
-                return done('write to queue error');
-            }
-            const firstGetProducer = manager.getProducerByScheduleName(SCHEDULE_NAME1);
-            manager.addKafkaSchedule(options,FIST_DATA,function(err) {
-                if (err) {
-                    console.error('write to queue error',err);
-                    return done('write to queue error');
-                }
-                const secondGetProducer = manager.getProducerByScheduleName(SCHEDULE_NAME1);
-                expect(firstGetProducer === secondGetProducer).to.be.true;
-                done();
-            });
-            
-        });
-        
     });
 
 });

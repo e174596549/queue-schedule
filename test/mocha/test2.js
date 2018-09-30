@@ -1,6 +1,6 @@
 // const kafka = require('kafka-node');
 const {expect} = require('chai');
-const {manager,KafkaProducer,KafkaConsumer} = require('../../index');
+const {KafkaProducer,KafkaConsumer} = require('../../index');
 // const ZK_HOST = process.env.ZOOKEEPER_PEERS;
 const KAFKA_HOST = process.env.KAFKA_PEERS;
 const FIST_DATA = {a:1,b:2};
@@ -96,20 +96,6 @@ describe('kafka schedule test with multi topic # ', function() {
         // },50000);
     });
 
-    it.skip('use manager to create a producer to send data to multi topic', function(done) {
 
-        manager.addKafkaSchedule({
-            name : SCHEDULE_NAME1,
-            topicList:TOPIC_LIST,
-            kafkaHost:KAFKA_HOST,
-        },FIST_DATA,function(err) {
-            if (err) {
-                console.error('write to queue error',err);
-                return done('write to queue error');
-            }
-            done();
-        });
-            
-    });
 
 });
