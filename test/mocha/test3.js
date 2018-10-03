@@ -28,59 +28,45 @@ describe('kafka schedule with delay producer test # ', function() {
 
     });
     
-        it('create a consumer to consume '+TOPIC_NAME5+ ' delay message',function(done) {
-            // setTimeout(function() {
-                let hasDone = false;
-                new KafkaConsumer({
-                    name: SCHEDULE_NAME1,
-                    kafkaHost:KAFKA_HOST,
-                    topics: [TOPIC_NAME5],
-                    consumerOption:{
-                        autoCommit: true,
-                        fetchMaxWaitMs: 1000,
-                        fromOffset: false,
-                        fetchMaxBytes: 1024*1024,
-                    },
-                    doTask:function(messages,callback) {console.log('kafka3',messages);
-                        if (!hasDone) {
-                            const value = messages[0].value;
-                            let data = null;
-                            try {
-                                data = JSON.parse(value);
-                            } catch (e) {
-                                hasDone = true;
-                                console.error('parse message error',e);
-                                return done('parse message error');
-                            }
-                            //expect(data).to.have.property('a').and.equal(1);
-                            console.log('recieve data',data);
-                            if (!hasDone) {
-                                done();hasDone = true;
-                            }
-                            
-                        }
-                        callback();
-                    },
-                    readCount : 1,
-                    pauseTime : 500,
-                    idleCheckInter: 5 * 1000
-                }).on(KafkaConsumer.EVENT_CONSUMER_ERROR,function(err) {
-                    console.error('consumer error',err);
-                    hasDone = true;
-                    done(err);
-                });;
-        
-                // setTimeout(function() {
-                //     if (!hasDone) {
-                //         console.log('this may be not data');
-                //         done();
-                //     }
+    it('create a consumer to consume '+TOPIC_NAME5+ ' delay message',function(done) {
+        let hasDone = false;
+        new KafkaConsumer({
+            name: SCHEDULE_NAME1,
+            kafkaHost:KAFKA_HOST,
+            topics: [TOPIC_NAME5],
+            consumerOption:{
+                autoCommit: true,
+                fetchMaxWaitMs: 1000,
+                fromOffset: false,
+                fetchMaxBytes: 1024*1024,
+            },
+            doTask:function(messages,callback) {console.log('kafka3',messages);
+                if (!hasDone) {
+                    const value = messages[0].value;
+                    let data = null;
+                    try {
+                        data = JSON.parse(value);
+                    } catch (e) {
+                        hasDone = true;
+                        console.error('parse message error',e);
+                        return done('parse message error');
+                    }
+                    //expect(data).to.have.property('a').and.equal(1);
+                    console.log('recieve data',data);
+                    if (!hasDone) {
+                        done();hasDone = true;
+                    }
                     
-                // },1000*10);
-            // },DELAY_INTERVAL*5);
+                }
+                callback();
+            },
+            readCount : 1,
+            pauseTime : 500,
+            idleCheckInter: 5 * 1000
+        }).on(KafkaConsumer.EVENT_CONSUMER_ERROR,function(err) {
+            console.error('consumer error',err);
+            hasDone = true;
+            done(err);
         });
-    //
-
-
-    
+    });
 });
