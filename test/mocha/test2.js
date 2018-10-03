@@ -29,7 +29,7 @@ describe('kafka schedule test with multi topic # ', function() {
         }).on(KafkaProducer.EVENT_PRODUCER_ERROR,function(err) {
             hasDone = true;
             done(err);
-        }).addData(FIST_DATA,function(err) {
+        }).addData(FIST_DATA,{},function(err) {
             if (err) {
                 console.error('write to queue error',err);
                 if (!hasDone) {

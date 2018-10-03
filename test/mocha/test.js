@@ -7,7 +7,7 @@ const FIST_DATA = {a:1,b:2};
 const SCHEDULE_NAME1 = 'schedule1';
 const TOPIC_NAME1 = 'topic.test1';
 
-describe('kafka schedule test# ', function() {
+describe('test1# ', function() {
     it('create a consumer',function(done) {
         let hasDone = false;
         new KafkaConsumer({
@@ -57,7 +57,7 @@ describe('kafka schedule test# ', function() {
             name : SCHEDULE_NAME1,
             topic: TOPIC_NAME1,
             kafkaHost:KAFKA_HOST,
-        }).addData(FIST_DATA,function(err) {
+        }).addData(FIST_DATA, {},function(err) {
             if (err) {
                 console.error('write to queue error',err);
                 return done('write to queue error');

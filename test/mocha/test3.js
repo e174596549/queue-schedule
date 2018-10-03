@@ -1,9 +1,7 @@
-// const kafka = require('kafka-node');
 // const async = require('async');
 const {expect} = require('chai');
 // const async = require('async');
 const {KafkaProducer,KafkaConsumer} = require('../../index');
-// const ZK_HOST = process.env.ZOOKEEPER_PEERS;
 const KAFKA_HOST = process.env.KAFKA_PEERS;
 const FIST_DATA = {a:1,b:2};
 const SCHEDULE_NAME1 = 'schedule3';

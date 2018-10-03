@@ -69,7 +69,7 @@ new KafkaProducer({
     topic: TOPIC_NAME1,
     partition:PARTITION1,
     zookeeperHost:ZK_HOST
-}).addData(FIST_DATA,function(err) {
+}).addData(FIST_DATA,{},function(err) {
     if (err) {
         console.error('write to queue error',err);
         return ;
