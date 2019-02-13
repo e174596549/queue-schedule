@@ -3,7 +3,7 @@
 1. Emit event when kafkaClient closed.
 2. Add the parameter of `prepareMiddleware` to `KafkaProducer`.
 
-## Broken Changes
+## Breaking Changes
 1. Remove the option of `zookeeperHost` form `KafkaProducer` and `KafkaConsumer`.
 2. Remove the `manager` object.
 3. Remove the function of `addDataDelay` form `KafkaProducer`.
