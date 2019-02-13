@@ -7,7 +7,7 @@ const SCHEDULE_NAME1 = 'schedule1';
 const TOPIC_NAME1 = 'topic.error';
 
 describe('error test#',function() {
-    it('use manager to create  producer to send multi data delay', function(done) {
+    it('should emit error event', function(done) {
         // const begin = new Date().getTime();
         const len = 10000;
 

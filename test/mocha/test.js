@@ -53,31 +53,24 @@ describe('test1# ', function() {
         });;
 
 
-        new KafkaProducer({
+        const producer = new KafkaProducer({
             name : SCHEDULE_NAME1,
             topic: TOPIC_NAME1,
             kafkaHost:KAFKA_HOST,
-        }).addData(FIST_DATA, {},function(err) {
+        });
+        producer.addData(FIST_DATA, {},function(err) {
             if (err) {
                 console.error('write to queue error',err);
                 return done('write to queue error');
             }
             console.info('write to kafka finished');
-        }).on(KafkaProducer.EVENT_CLIENT_READY,function() {
+        });
+        producer.on(KafkaProducer.EVENT_CLIENT_READY,function() {
             console.log('the producer client is ready');
         }).on(KafkaProducer.EVENT_PRODUCER_READY,function() {
             console.log('the producer self is ready');
         });
 
-        
-
-        // setTimeout(function() {
-        //     if (!hasDone) {
-        //         console.log('this may be not data');
-        //         done();
-        //     }
-            
-        // },5000*10);
     });
 
 });
