@@ -19,7 +19,7 @@ describe('kafka schedule test with topic suffix #', function() {
             name : SCHEDULE_NAME1,
             topic:TOPIC_NAME1,
             kafkaHost:KAFKA_HOST,
-        }).on(KafkaProducer.EVENT_PRODUCER_ERROR,function(err) {
+        }).on(KafkaProducer.EVENT_SEND_ERROR,function(err) {
             hasDone = true;
             done(err);
         }).addData(FIST_DATA,{topicSuffix:TOPIC_SUFFIX},function(err) {

@@ -1,3 +1,11 @@
+# v1.1.0
+## Add
+1. Add the object of `globalEvent` to emit the events of client's and producer's status.
+2. Use a producer pool to cache the producer with same kafka host, in other words, you will only create a single producer instance, when you instantiate diffrent `KafkaProducer` with the same kafka host.
+
+## Remove
+1. Remove the event of `EVENT_CLIENT_READY` `EVENT_CLIENT_ERROR` `EVENT_CLIENT_CLOSE` `EVENT_PRODUCER_READY` `EVENT_PRODUCER_ERROR` from `KafkaProducer`, these events mentioned above, are move to the object `globalEvent`.
+
 # v1.0.0
 ## Add
 1. Emit event when kafkaClient closed.
