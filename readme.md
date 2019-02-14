@@ -17,7 +17,7 @@ A basic example is showed as follows:
 const kafka = require('kafka-node');
 const {expect} = require('chai');
 const {KafkaProducer,KafkaConsumer} = require('queue-schedule');
-const ZK_HOST = process.env.ZOOKEEPER_PEERS;
+const KAFKA_HOST = process.env.KAFKA_PEERS;
 const FIST_DATA = {a:1,b:2};
 const SCHEDULE_NAME1 = 'schedule1';
 const TOPIC_NAME1 = 'topic.1';
@@ -26,15 +26,10 @@ const PARTITION1 = 0;
 let hasDone = false;
 new KafkaConsumer({
     name: 'kafka',
-    zookeeperHost:ZK_HOST,
-    topics: [{
-        topic: TOPIC_NAME1,
-        partition: PARTITION1,
-    }],
+    topics:[TOPIC_NAME1],
     consumerOption: {
-        autoCommit: true,
-        fetchMaxWaitMs: 1000,
-        fromOffset: false,
+        kafkaHost: KAFKA_HOST,
+        fromOffset: 'earliest',
         fetchMaxBytes: 1024*1024,
     },
     doTask:function(messages,callback) {console.log(messages);
@@ -67,9 +62,8 @@ new KafkaConsumer({
 new KafkaProducer({
     name : SCHEDULE_NAME1,
     topic: TOPIC_NAME1,
-    partition:PARTITION1,
-    zookeeperHost:ZK_HOST
-}).addData(FIST_DATA,function(err) {
+    kafkarHost:KAFKA_HOST
+}).addData(FIST_DATA,{},function(err) {
     if (err) {
         console.error('write to queue error',err);
         return ;
