@@ -1,3 +1,15 @@
+# v1.0.0
+## Add
+1. Emit event when kafkaClient closed.
+2. Add the parameter of `prepareMiddleware` to `KafkaProducer`.
+
+## Breaking Changes
+1. Remove the option of `zookeeperHost` form `KafkaProducer` and `KafkaConsumer`.
+2. Remove the `manager` object.
+3. Remove the function of `addDataDelay` form `KafkaProducer`.
+4. Remove the parameter of `topicList` from `KafkaProducer`.
+5. The function `addData` of `KafkaProducer` returns a boolean value, which indicate whether the data to send is vaild.
+
 # v0.6.0
 ## Add
 1. Bump the package `node-kafka` to 3.0.1.

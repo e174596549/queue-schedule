@@ -1,36 +1,28 @@
 // const kafka = require('kafka-node');
 const {expect} = require('chai');
-const {manager,KafkaProducer,KafkaConsumer} = require('../../index');
-const ZK_HOST = process.env.ZOOKEEPER_PEERS;
+const {KafkaProducer,KafkaConsumer} = require('../../index');
+// const ZK_HOST = process.env.ZOOKEEPER_PEERS;
 const KAFKA_HOST = process.env.KAFKA_PEERS;
 const FIST_DATA = {a:1,b:2};
 const SCHEDULE_NAME1 = 'schedule2';
 const TOPIC_NAME1 = 'topic.2';
-const TOPIC_NAME2 = 'topic.3';
+const TOPIC_SUFFIX = '.my.suffix';
 
-const TOPIC_LIST = [
-    {
-        name:TOPIC_NAME1,
-    },
-    {
-        name : TOPIC_NAME2,
-    }
-];
 
-describe('kafka schedule test with multi topic # ', function() {
 
-    it('create a producer to send to multi topic', function(done) {
+describe('kafka schedule test with topic suffix #', function() {
+
+    it('create a producer to send data a topic with suffix ' + TOPIC_SUFFIX, function(done) {
 
         let hasDone = false;
         new KafkaProducer({
             name : SCHEDULE_NAME1,
-            topicList:TOPIC_LIST,
+            topic:TOPIC_NAME1,
             kafkaHost:KAFKA_HOST,
-            zookeeperHost:ZK_HOST
         }).on(KafkaProducer.EVENT_PRODUCER_ERROR,function(err) {
             hasDone = true;
             done(err);
-        }).addData(FIST_DATA,function(err) {
+        }).addData(FIST_DATA,{topicSuffix:TOPIC_SUFFIX},function(err) {
             if (err) {
                 console.error('write to queue error',err);
                 if (!hasDone) {
@@ -43,17 +35,13 @@ describe('kafka schedule test with multi topic # ', function() {
 
     });
 
-    it('create a consumer to consume one of the topic',function(done) {
+    it('create a consumer to consume the topic with suffix ' + TOPIC_SUFFIX,function(done) {
 
         let hasDone = false;
         new KafkaConsumer({
             name: 'kafka',
-            zookeeperHost:ZK_HOST,
             kafkaHost:KAFKA_HOST,
-            topics: [{
-                topic: TOPIC_NAME1,
-                offset: 0
-            }],
+            topics: [TOPIC_NAME1+TOPIC_SUFFIX],
             consumerOption:{
                 autoCommit: true,
                 fetchMaxWaitMs: 1000,
@@ -98,21 +86,6 @@ describe('kafka schedule test with multi topic # ', function() {
         // },50000);
     });
 
-    it('use manager to create a producer to send data to multi topic', function(done) {
 
-        manager.addKafkaSchedule({
-            name : SCHEDULE_NAME1,
-            topicList:TOPIC_LIST,
-            kafkaHost:KAFKA_HOST,
-            host:ZK_HOST
-        },FIST_DATA,function(err) {
-            if (err) {
-                console.error('write to queue error',err);
-                return done('write to queue error');
-            }
-            done();
-        });
-            
-    });
 
 });
