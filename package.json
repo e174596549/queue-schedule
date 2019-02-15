@@ -9,8 +9,9 @@
   "scripts": {
     "bump_path": "npm version patch -m \"upgrade to %s\"",
     "bump_minor": "npm version minor -m \"upgrade to %s\"",
-    "release":"git push && release-to-github-with-changelog",
-    "test": "mocha --recursive --timeout 999999 test/mocha"
+    "release":"git push && release-to-github-with-changelog --remote",
+    "test": "mocha --recursive --timeout 999999 test/mocha",
+    "doc": "jsdoc lib/*.js -d docs"
   },
   "repository": {
     "type": "git",
