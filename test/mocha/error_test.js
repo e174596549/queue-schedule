@@ -1,6 +1,6 @@
 const {expect} = require('chai');
-const {KafkaProducer} = require('../../index');
-// const ZK_HOST = process.env.ZOOKEEPER_PEERS;//console.log(process.env);
+const {KafkaProducer,globalEvent} = require('../../index');
+
 const KAFKA_HOST = process.env.KAFKA_PEERS;
 // const FIST_DATA = {a:1,b:2};
 const SCHEDULE_NAME1 = 'schedule1';
@@ -30,8 +30,21 @@ describe('error test#',function() {
             expect(err).to.not.be.null;
             expect(data.length).to.be.equal(len);
             done();
-        }).on(KafkaProducer.EVENT_PRODUCER_ERROR,function(err) {
-            console.log('producer error',err);
+        });
+        
+    });
+    it('should emitt close when broker not exist',function(done) {
+        const HOST_NOT_EXIST = 'HOST_NOT_EXIST';
+        var hasDone = false;
+        globalEvent.on(globalEvent.EVENT_CLIENT_CLOSE,function(kafkaHost) {
+            expect(kafkaHost).to.be.equal(HOST_NOT_EXIST);
+            if (!hasDone) {done();} 
+            hasDone = true;
+        });
+        new KafkaProducer({
+            name : SCHEDULE_NAME1,
+            topic: TOPIC_NAME1,
+            kafkaHost:HOST_NOT_EXIST,
         });
         
     });
