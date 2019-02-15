@@ -65,11 +65,11 @@ describe('test1# ', function() {
             }
             console.info('write to kafka finished');
         });
-        producer.on(KafkaProducer.EVENT_CLIENT_READY,function() {
-            console.log('the producer client is ready');
-        }).on(KafkaProducer.EVENT_PRODUCER_READY,function() {
-            console.log('the producer self is ready');
-        });
+        // producer.on(KafkaProducer.EVENT_CLIENT_READY,function() {
+        //     console.log('the producer client is ready');
+        // }).on(KafkaProducer.EVENT_PRODUCER_READY,function() {
+        //     console.log('the producer self is ready');
+        // });
 
     });
 
