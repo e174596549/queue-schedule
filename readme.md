@@ -74,7 +74,7 @@ new KafkaProducer({
 
 ## API
 
-For detail usage, see the document online [here](https://doclets.io/yunnysunny/queue-schedule/master).
+For detail usage, see the document online [here](https://yunnysunny.github.io/queue-schedule/docs).
 
 ## License
 
